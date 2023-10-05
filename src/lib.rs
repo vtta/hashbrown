@@ -8,6 +8,8 @@
 //! [SwissTable]: https://abseil.io/blog/20180927-swisstables
 //! [here]: https://github.com/abseil/abseil-cpp/blob/master/absl/container/internal/raw_hash_set.h
 //! [CppCon talk]: https://www.youtube.com/watch?v=ncHmEUmJZf4
+#![allow(unsafe_op_in_unsafe_fn)]
+#![allow(unreachable_pub)]
 
 #![no_std]
 #![cfg_attr(
@@ -43,7 +45,7 @@
 extern crate std;
 
 #[cfg_attr(test, macro_use)]
-extern crate alloc;
+extern crate alloc as alloc;
 
 #[cfg(feature = "nightly")]
 #[cfg(doctest)]

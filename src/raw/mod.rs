@@ -1,4 +1,4 @@
-use crate::alloc::alloc::{handle_alloc_error, Layout};
+use crate::alloc::alloc::Layout;
 use crate::scopeguard::{guard, ScopeGuard};
 use crate::TryReserveError;
 use core::iter::FusedIterator;
@@ -87,7 +87,7 @@ impl Fallibility {
     fn alloc_err(self, layout: Layout) -> TryReserveError {
         match self {
             Fallibility::Fallible => TryReserveError::AllocError { layout },
-            Fallibility::Infallible => handle_alloc_error(layout),
+            Fallibility::Infallible => panic!("Allocation failure"),
         }
     }
 }

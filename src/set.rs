@@ -1,7 +1,6 @@
 #[cfg(feature = "raw")]
 use crate::raw::RawTable;
 use crate::{Equivalent, TryReserveError};
-use alloc::borrow::ToOwned;
 use core::fmt;
 use core::hash::{BuildHasher, Hash};
 use core::iter::{Chain, FromIterator, FusedIterator};
@@ -915,38 +914,6 @@ where
             .raw_entry_mut()
             .from_key(&value)
             .or_insert(value, ())
-            .0
-    }
-
-    /// Inserts an owned copy of the given `value` into the set if it is not
-    /// present, then returns a reference to the value in the set.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use hashbrown::HashSet;
-    ///
-    /// let mut set: HashSet<String> = ["cat", "dog", "horse"]
-    ///     .iter().map(|&pet| pet.to_owned()).collect();
-    ///
-    /// assert_eq!(set.len(), 3);
-    /// for &pet in &["cat", "dog", "fish"] {
-    ///     let value = set.get_or_insert_owned(pet);
-    ///     assert_eq!(value, pet);
-    /// }
-    /// assert_eq!(set.len(), 4); // a new "fish" was inserted
-    /// ```
-    #[inline]
-    pub fn get_or_insert_owned<Q: ?Sized>(&mut self, value: &Q) -> &T
-    where
-        Q: Hash + Equivalent<T> + ToOwned<Owned = T>,
-    {
-        // Although the raw entry gives us `&mut T`, we only return `&T` to be consistent with
-        // `get`. Key mutation is "raw" because you're not supposed to affect `Eq` or `Hash`.
-        self.map
-            .raw_entry_mut()
-            .from_key(value)
-            .or_insert_with(|| (value.to_owned(), ()))
             .0
     }
 
